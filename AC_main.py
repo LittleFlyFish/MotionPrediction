@@ -45,9 +45,9 @@ if args.dataset=="human3.6m":
         dloader = VAE.DataLoader(50, 25, PATH + '/data/h3.6m/dataset')
     else:
         dloader = VAE.DataLoader(50, args.output_length, PATH + '/data/h3.6m/dataset')
-    encoder = humanEncoder.ACEncoder(16, re_term)
-    decoder = humanEncoder.AEDecoder(16, re_term)
-    discriminator = humanEncoder.Discriminator(32, re_term)
+    encoder = humanEncoder.ACEncoder(nfilters=16, re_term=re_term)
+    decoder = humanEncoder.AEDecoder(nfilters=16, re_term=re_term)
+    discriminator = humanEncoder.Discriminator(nfilters=32, re_term=re_term)
     inputDimension=54
 
     ###---------train on the cmu dataset,the difference is that the input dimension is 70 ------------------
@@ -82,7 +82,7 @@ VAETrain = VAE.Autoencoder_gan.Autoenc_gan(encoder,
                                            modelname=model_name,
                                            learning_rate=5e-5,
                                            batch_size=16,
-                                           iterations=80000,
+                                           iterations=40000,
                                            gan_loss_weight=gan_loss_weight,
                                            sampling=args.use_sampling,
                                            window_length=args.window_length,
@@ -102,5 +102,6 @@ with tf.Session() as sess:
         # VAETrain.Saver.restore(sess,'./Models/Models_kernel54/{}-{}'.format(model_name,args.checkpoint))
         VAETrain.Saver.restore(sess, PATH + '/Models/{}-{}'.format(model_name, args.checkpoint))
         VAETrain.InferenceSample(sess,dloader)
+
 
 
